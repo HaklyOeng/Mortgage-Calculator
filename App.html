@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APP Name: By Hakly Oeng</title>
+    <title>Loan Calculator: By Hakly Oeng</title>
     <!--Bootstrap CSS-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -28,7 +28,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="index.html">
                 <img src="/img/Logo to use/light_initial.svg" height="35" />
-                APP NAME
+                Loan Calculator
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -41,7 +41,7 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  active" aria-current="page" href="/App.html">App NAME</a>
+                        <a class="nav-link  active" aria-current="page" href="/App.html">Loan Calculator</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/Code.html">The Code</a>
@@ -68,12 +68,90 @@
         </div>
     </nav>
 
-    <main class="container py-3">
-        <h1>APP UI GOES HERE</h1>
-        <input class="form-control my-3" placeholder="Enter a message" type="text" style="width: 10rem" name="message"
-            id="message" />
+    <main class="container-xl py-3">
+        <div class="row row-cols-1 g-3">
+            <div class="col-md-4 order-1 order-md-0 ">
+                <div class="card rounded-0 h-100">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <label for="loanAmount" class="col col-form-label">Loan Amount:</label>
+                            <div class="col">
+                                <input type="number" class="form-control" id="loanAmount" name="loanAmount" placeholder="0" value="25000" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="months" class="col col-form-label">Term (Months):</label>
+                            <div class="col">
+                                <input type="number" class="form-control" id="months" name="months" placeholder="0" value="60" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="interestRate" class="col col-form-label">Interest Rate:</label>
+                            <div class="col">
+                                <input type="number" class="form-control" id="interestRate" name="interestRate"
+                                    placeholder="0" value="5" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-5 pb-2 px-3 text-end">
+                        <button class="btn btn-success" type="button" onclick="getValues()">Calculate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card rounded-0 h-100">
+                    <div class="card-head">
+                        <div class="col text-center mb-md-5">
+                            <h2 class="py-3">Your Monthly Payment</h2>
+                            <h2 class="py-3" id="card-monthlyPayment"></h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th class="w-75">Total Principal</th>
+                                    <td id="card-principal">Principal result</td>
+                                </tr>
+                                <tr>
+                                    <th class="w-75">Total Interest</th>
+                                    <td id="card-totalInterest">Interest result</td>
+                                </tr>
+                                <tr>
+                                    <th class="w-75">Total Cost</th>
+                                    <td id="card-total">Total result</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped border my-3">
+                <thead>
+                    <tr>
+                        <th scope="col">Month</th>
+                        <th scope="col">Payment</th>
+                        <th scope="col">Principal</th>
+                        <th scope="col">Interest</th>
+                        <th scope="col">Total Interest</th>
+                        <th scope="col">Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody" >
+                    <tr>
+                        <td >Month Num</td>
+                        <td >Payment result</td>
+                        <td >Principal result</td>
+                        <td >Interest result</td>
+                        <td >Total Interest result</td>
+                        <td >Balance left</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <button id="btnSubmit" class="btn btn-primary">Display message</button>
     </main>
 
     <footer class="py-3 container-fluid">
@@ -93,23 +171,16 @@
             </div>
         </div>
 
-    </footer>
+    </footer>   
+
     <!-- BootStrap Java -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-    <!--Sweet Alert--> 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    <!--Sweet Alert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--Custom JS -->
     <script src="/js/site.js"></script>
-    <script>
-        // get the button on the page and assign it to a variable
-        let button = document.getElementById('btnSubmit');
-
-        // tell the button to run our displayMessage when clicked
-        button.addEventListener('click', displayMessage);
-
-    </script>
 </body>
 
 </html>
