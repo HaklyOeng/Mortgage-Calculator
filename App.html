@@ -73,53 +73,57 @@
             <div class="col-md-4 order-1 order-md-0 ">
                 <div class="card rounded-0 h-100">
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <label for="loanAmount" class="col col-form-label">Loan Amount:</label>
+                        <div class="row row-cols-1 mb-3">
                             <div class="col">
-                                <input type="number" class="form-control" id="loanAmount" name="loanAmount" placeholder="0" value="25000" required>
+                                <label for="loanAmount" class="col col-form-label fw-bold">Loan Amount:</label>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="months" class="col col-form-label">Term (Months):</label>
                             <div class="col">
-                                <input type="number" class="form-control" id="months" name="months" placeholder="0" value="60" required>
+                                <input type="number" class="form-control" id="loanAmount" name="loanAmount"
+                                    placeholder="Enter Loan Amount" min="0" step="100" required>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="interestRate" class="col col-form-label">Interest Rate:</label>
+                            <div class="col">
+                                <label for="months" class="col col-form-label fw-bold">Term (Months):</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" id="months" name="months"
+                                    placeholder="Enter Loan Term" min="0" required>
+                            </div>
+                            <div class="col">
+                                <label for="interestRate" class="col col-form-label fw-bold">Interest Rate:</label>
+                            </div>
                             <div class="col">
                                 <input type="number" class="form-control" id="interestRate" name="interestRate"
-                                    placeholder="0" value="5" required>
+                                    placeholder="Enter Interest Rate" min="0" step=".1" required>
                             </div>
                         </div>
                     </div>
                     <div class="pt-5 pb-2 px-3 text-end">
-                        <button class="btn btn-success" type="button" onclick="getValues()">Calculate</button>
+                        <button class="btn btn-success" type="button" onclick="getLoanValue()">Calculate</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="card rounded-0 h-100">
-                    <div class="card-head">
-                        <div class="col text-center mb-md-5">
-                            <h2 class="py-3">Your Monthly Payment</h2>
-                            <h2 class="py-3" id="card-monthlyPayment"></h2>
+                    <div class="card-head p-3">
+                        <div class="col text-center border">
+                            <h2 class="py-3 fw-bolder fs-2">Your Monthly Payment</h2>
+                            <h2 class="py-3 fs-1 fw-bold text-success" id="card-monthlyPayment">$0.00</h2>
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-borderless">
+                        <table class="table border">
                             <tbody>
                                 <tr>
-                                    <th class="w-75">Total Principal</th>
-                                    <td id="card-principal">Principal result</td>
+                                    <th class="w-75 border-end">Total Principal</th>
+                                    <td id="card-principal">$0.00</td>
                                 </tr>
                                 <tr>
-                                    <th class="w-75">Total Interest</th>
-                                    <td id="card-totalInterest">Interest result</td>
+                                    <th class="w-75 border-end">Total Interest</th>
+                                    <td id="card-totalInterest">$0.00</td>
                                 </tr>
                                 <tr>
-                                    <th class="w-75">Total Cost</th>
-                                    <td id="card-total">Total result</td>
+                                    <th class="w-75 border-end">Total Cost</th>
+                                    <td id="card-totalCost">$0.00</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -127,10 +131,10 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-striped border my-3">
+        <div class="table-responsive my-3 tableHeight border border-top-1 border-bottom-0 border-start-0 border-end-0">
+            <table class="table table-striped border text-center">
                 <thead>
-                    <tr>
+                    <tr class="fixheader">
                         <th scope="col">Month</th>
                         <th scope="col">Payment</th>
                         <th scope="col">Principal</th>
@@ -139,15 +143,7 @@
                         <th scope="col">Balance</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody" >
-                    <tr>
-                        <td >Month Num</td>
-                        <td >Payment result</td>
-                        <td >Principal result</td>
-                        <td >Interest result</td>
-                        <td >Total Interest result</td>
-                        <td >Balance left</td>
-                    </tr>
+                <tbody id="tableBody">
                 </tbody>
             </table>
         </div>
@@ -171,7 +167,17 @@
             </div>
         </div>
 
-    </footer>   
+    </footer>
+    <template id="table-template">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </template>
 
     <!-- BootStrap Java -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

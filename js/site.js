@@ -1,167 +1,141 @@
-function getValues() {
+function getLoanValue() {
+
     let loanAmount = document.getElementById('loanAmount').value;
     let months = document.getElementById('months').value;
     let interestRate = document.getElementById('interestRate').value;
 
-    loanAmount = parseInt(loanAmount);
-    months = parseInt(months);
-    interestRate = parseFloat(interestRate);
+    amount = parseInt(loanAmount);
+    term = parseInt(months);
+    rate = parseFloat(interestRate);
 
-    //Total Principle
-    document.querySelector('#card-principal').textContent = `$ ${loanAmount.toFixed(2)}`;
-    let input = {
-        loanAmount: loanAmount,
-        term: months,
-        rate: interestRate
+    let tableBody = document.getElementById('tableBody');
+    let tableRow = tableBody.querySelectorAll('tr');
+
+    if (tableRow.length > 0) {
+        deleteRow(tableBody, tableRow);
     }
-    /*
-    if (isNan(priniciple)) {
-        return an error
-    } */
-
-    if (Number.isInteger(loanAmount) && Number.isInteger(months) && Number.isInteger(interestRate)) {
-
-        let results = loanCalculate(input);
-        displayResults(results);      
-    } else if (loanAmount <= 0 && months <= 0 && interestRate <= 0) {
-        return Swal.fire({
-            icon: 'error',
-            backdrop: false,
-            title: 'Attention',
-            text: "Every entrie can't be 0 or less"
-        });
-    } else if (loanAmount <= 0 && months > 0 && interestRate > 0) {
-        return Swal.fire({
-            icon: 'error',
-            backdrop: false,
-            title: 'Attention',
-            text: 'Please check the Loan Amount and enter an amount that is more than $0'
-        });
-    } else if (months <= 0 && loanAmount > 0 && interestRate > 0) {
-        return Swal.fire({
-            icon: 'error',
-            backdrop: false,
-            title: 'Attention',
-            text: 'Please check the Term and enter an a time period that is more than 0'
-        });
-    } else if (interestRate <= 0 && months > 0 && loanAmount > 0) {
-        return Swal.fire({
-            icon: 'error',
-            backdrop: false,
-            title: 'Attention',
-            text: 'Please check the Interest Rate and enter an a Rate that is more than 0'
-        });
-    } else {        
-        Swal.fire({
-            icon: 'error',
-            title: 'Attention',
-            text: 'Please enter valid numbers.'
-        });
+    
+    if (isNaN(amount) || isNaN(term) || isNaN(rate)){
+        let entry = false;
+        return error(entry);
+    } else if (amount < 0 || term < 0 || rate < 0) {
+        let entry = true;
+        return error(entry);
     }
+    let loanTotal = calcLoanTotal(amount, term, rate);
+    displayLoanTotal(loanTotal);
 
-
-
+    let loanMonthly = calcLoanMonthly(loanTotal.monthlyPayment, term, amount, rate);
+    displayLoanMonthly(loanMonthly);
 
 }
 
-function loanCalculate(input) {
-    let loan = input.loanAmount;
-    let months = input.term;
-    let rate = input.rate;
+function calcLoanTotal(amount, term, rate) {
+    /*Total Monthly Payment = (amount loaned) * (rate / 1200) / ( 1 - (1 + rate/1200)^(-Number of Months) )*/
+    let monthlyPayment = amount * (rate / 1200) / (1 - Math.pow(1 + rate / 1200, -term));
+    let totalCost = monthlyPayment * term;
+    let totalInterest = totalCost - amount;
 
-    let tableData = document.getElementById('tableBody');
-    tableData.innerHTML = '';
-    let monthlyPayment = 0;
-    let remainingBalance = loan;
-    let addingInterest = 0;
-    let totalCost = 0;
-
-
-    for (i = 0; i < months; i++) {
-
-        monthlyPayment = (loan * (rate / 1200) / (1 - Math.pow((1 + rate / 1200), (- months))));
-        let interestPayment = (remainingBalance * rate / 1200);
-        let principalPayment = (monthlyPayment - interestPayment);
-
-        if (remainingBalance == loan || addingInterest < interestPayment || totalCost < monthlyPayment) {
-            remainingBalance = (loan - principalPayment);
-            addingInterest = interestPayment;
-            totalCost = monthlyPayment;
-        } else {
-            (remainingBalance - principalPayment);
-            addingInterest += interestPayment;
-            totalCost += monthlyPayment;
-        }
-
-
-
-        let tableRow = document.createElement('tr');
-
-        let month = document.createElement('td');
-        month.innerText = i + 1;
-        tableRow.appendChild(month);
-
-        let payment = document.createElement('td');
-        payment.innerText = monthlyPayment.toFixed(2);
-        tableRow.appendChild(payment);
-
-        let principal = document.createElement('td');
-        principal.innerText = principalPayment.toFixed(2);
-        tableRow.appendChild(principal);
-
-        let interest = document.createElement('td');
-        interest.innerText = interestPayment.toFixed(2);
-        tableRow.appendChild(interest);
-
-        let totalInterest = document.createElement('td');
-        totalInterest.innerText = addingInterest.toFixed(2);
-        tableRow.appendChild(totalInterest);
-
-        let balance = document.createElement('td');
-        balance.innerText = (remainingBalance -= principalPayment).toFixed(2);
-        tableRow.appendChild(balance);
-
-        tableData.appendChild(tableRow);
-
-    }
-    let results = {
-        addingInterest, monthlyPayment, totalCost
+    let total = {
+        monthlyPayment, totalCost, totalInterest, amount
     }
 
-    return results;
-
+    return total;
 }
 
-function displayResults(input) {
-    let monthlyPayment = input.monthlyPayment.toFixed(2);
-    let totalInterest = input.addingInterest.toFixed(2);
-    let totalCost = input.totalCost.toFixed(2);
-    document.querySelector('#card-monthlyPayment').textContent = `$ ${monthlyPayment}`;
-    document.querySelector('#card-totalInterest').textContent = `$ ${totalInterest}`;
-    document.querySelector('#card-total').textContent = `$ ${totalCost}`;
-}
-
-/*
-function displayPayment(paymentsArr) {
+function displayLoanTotal(loanTotal) {
 
     const formatOptions = {
-        style = 'currency',
-        currency = 'USD'
+        style: 'currency',
+        currency: 'USD',
     };
-    const tableRowTemplate = document.getElementById('monthlyPaymentTemplate');
+    document.querySelector('#card-monthlyPayment').textContent = loanTotal.monthlyPayment.toLocaleString('en-US', formatOptions);
+    document.querySelector('#card-principal').textContent = loanTotal.amount.toLocaleString('en-US', formatOptions);
+    document.querySelector('#card-totalInterest').textContent = loanTotal.totalInterest.toLocaleString('en-US', formatOptions);
+    document.querySelector('#card-totalCost').textContent = loanTotal.totalCost.toLocaleString('en-US', formatOptions);
 
-    paymentsArr.forEach(paynebt => {
-        let tableRow = tableRowTemplate.content.cloneNode(true);
-
-        let tableCells = tableRow.querrySelectorAll('td'); // give you an array of element
-
-        tableCell[0].textContent = payment.month;
-        tableCell[1].textContent = payment.monthlyPayment.toLocalStrong('en-US', formatOptions);
-        tableCell[2].textContent = payment.principal;
-        tableCell[3].textContent = payment.interest;
-        tableCell[4].textContent = payment.totalInterest;
-        tableCell[5].textContent = Math.abs(payment.balance);
-
-    })
 }
-*/
+
+function calcLoanMonthly(monthlyPayment, term, amount, rate) {
+
+    let remainingBalance = amount;
+    let totalInterest = 0;
+    let loanMonthly = [];
+
+    for (let n = 1; n <= term; n++) {
+
+        let interestPayment = remainingBalance * (rate / 1200);
+        let principalPayment = monthlyPayment - interestPayment;
+
+        remainingBalance -= principalPayment;
+        totalInterest += interestPayment;
+
+        let results = {
+            month: n,
+            payment: monthlyPayment,
+            principal: principalPayment,
+            interest: interestPayment,
+            totalInterest: totalInterest,
+            balance: remainingBalance,
+        };
+        loanMonthly.push(results)
+    }
+    return loanMonthly;
+
+}
+
+function displayLoanMonthly(LoanMonthly) {
+
+    const formatOptions = {
+        style: 'currency',
+        currency: 'USD'
+    };
+    const tableRowTemplate = document.getElementById('table-template');
+    let tableBody = document.getElementById('tableBody');    
+
+    for (let i = 0; i < LoanMonthly.length; i++) {
+        let tableRow = tableRowTemplate.content.cloneNode(true);
+        let tableCell = tableRow.querySelectorAll('td');
+
+        tableCell[0].textContent = LoanMonthly[i].month;
+        tableCell[1].textContent = LoanMonthly[i].payment.toLocaleString('en-US', formatOptions);
+        tableCell[2].textContent = LoanMonthly[i].principal.toLocaleString('en-US', formatOptions);
+        tableCell[3].textContent = LoanMonthly[i].interest.toLocaleString('en-US', formatOptions);
+        tableCell[4].textContent = LoanMonthly[i].totalInterest.toLocaleString('en-US', formatOptions);
+        tableCell[5].textContent = Math.abs(LoanMonthly[i].balance).toLocaleString('en-US', formatOptions);
+        tableBody.appendChild(tableRow);
+    };
+}
+
+function deleteRow(table, row) {
+    for(let i = 0; i < row.length; i++)
+    table.deleteRow(0);
+  }
+
+function error(entry) {
+
+    const formatOptions = {
+        style: 'currency',
+        currency: 'USD',
+    };
+
+    document.querySelector('#card-monthlyPayment').textContent = 0.00.toLocaleString('en-US', formatOptions);
+    document.querySelector('#card-principal').textContent = 0.00.toLocaleString('en-US', formatOptions);
+    document.querySelector('#card-totalInterest').textContent = 0.00.toLocaleString('en-US', formatOptions);
+    document.querySelector('#card-totalCost').textContent = 0.00.toLocaleString('en-US', formatOptions);
+    if (entry = false) {
+        Swal.fire({
+            icon: 'error',
+            backdrop: false,
+            title: 'Attention',
+            text: "Make sure that all entries is fill up Properly"
+        });
+    } else if (entry = true) {
+        return Swal.fire({
+            icon: 'error',
+            backdrop: false,
+            title: 'Attention',
+            text: "Make sure that none of entries is less than zero"
+        });
+    }
+}

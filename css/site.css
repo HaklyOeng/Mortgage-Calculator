@@ -1,6 +1,8 @@
 :root {
-    --ho-primary-color: #059DC0; /* theme-100 or theme-200 */
-    --ho-secondary-color: #ff993b; /* theme-core theme-500 or theme-600 */
+    --ho-primary-color: #059DC0;
+    /* theme-100 or theme-200 */
+    --ho-secondary-color: #ff993b;
+    /* theme-core theme-500 or theme-600 */
     --ho-light-color: #dfe3e4;
     --ho-dark-color: #1b1b1b;
 }
@@ -23,6 +25,7 @@ main {
 footer {
     flex-shrink: 0;
 }
+
 /* #endregion Sticky Footer*/
 
 footer,
@@ -47,10 +50,54 @@ footer .bi:hover {
 }
 
 .bi-check-square-fill {
-    color: var(--ho-secondary-color);    
+    color: var(--ho-secondary-color);
 }
 
 .app-logo {
-    max-width: 400px;    
+    max-width: 400px;
 }
 
+
+.tableHeight {
+    /* make the table scrollable if height is more than 200 px  */
+    height: 451px;
+    /* gives an initial height of 370px to the table */
+}
+
+.fixheader {
+    position: sticky;
+    top: -1px;
+}
+
+
+/*Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) { 
+    .tableHeight {
+        height: 450px;
+    }
+    .fixheader {
+        position: sticky;
+        top: -1px;
+    }
+ }
+
+/*Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) { 
+    .tableHeight {
+        height: 427px;        
+    }
+ }
+
+/*Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) { 
+    
+ }
+
+/*X-Large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) { 
+    
+ }
+/*XX-Large devices (larger desktops, 1400px and up)*/
+@media (min-width: 1400px) { 
+    
+ }
